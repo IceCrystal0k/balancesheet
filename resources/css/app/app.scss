@@ -1,0 +1,33 @@
+//
+// App custom style
+//
+
+// Mode
+$mode: default;
+
+@import 'variables.scss';
+
+//  Customize theme alerts
+@import 'alerts.scss';
+
+// Customize sweetalert2
+@import 'sweetalert.scss';
+
+// Customize form
+@import 'form.scss';
+
+// Customize icons
+@import 'icons.scss';
+
+//  Customize select 2
+@import 'select2.scss';
+
+//  Customize datatable
+@import 'datatable.scss';
+
+// Customize autocomplete
+@import 'autocomplete.scss';
+
+
+// statistics page
+@import 'statistics.scss';

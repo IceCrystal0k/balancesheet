@@ -1,0 +1,37 @@
+.chart {
+    .chart-label {
+        font-size: 14px;
+        padding: 3px 0;
+        padding-top: 10px;
+    }
+    .chart-bar {
+        height: 15px;
+        background-color: rgba(80, 205, 137, 0.85);
+        display: inline-block;
+        width: 0;
+
+        &.blue {
+            background-color: rgba(62, 151, 255, 0.85);
+        }
+        &.red {
+            background-color:rgba(241, 65, 108, 0.85);
+        }
+    }
+    .ruler {
+        position: relative;
+        border: 1px dotted white;
+        margin-top: 10px;
+        span {
+            position: absolute;
+            top: 2px;
+        }
+        em {
+            position: absolute;
+            border-left: 1px dotted white;
+            top: -5px;
+            height: 12px;
+            width: 1px;
+        }
+
+    }
+}

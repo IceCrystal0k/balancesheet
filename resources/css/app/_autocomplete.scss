@@ -1,0 +1,18 @@
+.ui-widget.ui-widget-content {
+    background: #171723;
+    border-radius: 0 0 0.475rem 0.475rem;
+    border-color: #171723;
+    border-top: 0;
+    li.ui-menu-item {
+        list-style-image: none;
+        .ui-menu-item-wrapper {
+            padding: .65rem 0.7rem;
+            &.ui-state-active {
+                background: #1e1e2d;
+                border: none;
+                font-weight: normal;
+                margin: 0;
+            }
+        }
+    }
+}

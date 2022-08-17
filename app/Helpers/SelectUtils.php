@@ -1,0 +1,52 @@
+<?php
+namespace App\Helpers;
+
+use App\Helpers\HtmlControls;
+use App\Models\BalanceType;
+use App\Models\Currency;
+use App\Models\Target;
+
+class SelectUtils
+{
+    /**
+     * get currency for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected currency
+     * @return {string} dropdown data, in html format
+     */
+    public static function getCurrencySelectOptions($selectedValue)
+    {
+        $currencyList = Currency::select('iso_code', 'name', 'flag')->where('status', 1)->orderBy('name')->get();
+        $selectOptions = HtmlControls::GenerateDropDownList($currencyList, ['value' => $selectedValue, 'valueField' => 'iso_code', 'textField' => 'name',
+            'attribute' => ['expression' => 'data-kt-flag="' . asset('media/theme/flags/') . '/%s"', 'fields' => ['flag']]]);
+
+        return $selectOptions;
+    }
+
+    /**
+     * get balance type for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected currency
+     * @return {string} dropdown data, in html format
+     */
+    public static function getBalanceTypeSelectOptions($selectedValue)
+    {
+        $selectedValue = StringUtils::getIntegerValue($selectedValue);
+        $list = BalanceType::select('id', 'name')->orderBy('name')->get();
+        $selectOptions = HtmlControls::GenerateDropDownList($list, ['value' => $selectedValue, 'valueField' => 'id', 'textField' => 'name']);
+
+        return $selectOptions;
+    }
+
+    /**
+     * get target for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected currency
+     * @return {string} dropdown data, in html format
+     */
+    public static function getTargetSelectOptions($selectedValue)
+    {
+        $selectedValue = StringUtils::getIntegerValue($selectedValue);
+        $list = Target::select('id', 'name')->orderBy('name')->get();
+        $selectOptions = HtmlControls::GenerateDropDownList($list, ['value' => $selectedValue, 'valueField' => 'id', 'textField' => 'name']);
+
+        return $selectOptions;
+    }
+}

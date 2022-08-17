@@ -1,0 +1,10 @@
+.alert-dismissible .svg-icon.svg-icon-light svg [fill]:not(.permanent):not(g) {
+    fill: white;
+}
+
+.alert ul {
+    list-style-type: disc;
+	li {
+		padding: 3px 0;
+	}
+}
