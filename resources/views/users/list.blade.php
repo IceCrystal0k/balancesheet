@@ -9,7 +9,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid">
-    @include('partials.page.toolbar', ['btn_create' => __('user.CreateNew')])
+    @include('partials.page.toolbar', ['btn_create' => __($page->translationPrefix.'CreateNew')])
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid">
         <!--begin::Container-->
@@ -19,7 +19,7 @@
                 @include('errors.success')
                 @include('errors.error')
 
-                @include('users.filter')
+                @include($page->viewPath.'.filter')
 
                 <!--begin::Card body-->
                 <div class="card-body pt-0">
@@ -54,7 +54,7 @@
             </div>
             <!--end::Card-->
             <!--begin::Modals-->
-            @include('users.export')
+            @include($page->viewPath.'.export')
             <!--end::Modal - New Card-->
             <!--end::Modals-->
         </div>
@@ -68,12 +68,12 @@
 @section('vendor_js_files')
 <script src="{{ asset('vendors/i18next/i18next.min.js') }}"></script>
 <script src="{{ asset('vendors/sweetalert2/sweetalert2.min.js') }}"></script>
-@endsection
-
-@section('page_js_files')
 <script src="{{ asset('vendors/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('vendors/datatables/plugins/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/moment.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/daterangepicker.js') }}"></script>
+@endsection
+
+@section('page_js_files')
 <script src="{{ asset('js/app/users/list.js') }}"></script>
 @endsection

@@ -49,4 +49,28 @@ class SelectUtils
 
         return $selectOptions;
     }
+
+    /**
+     * get date format for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected product id
+     * @return {string} dropdown data, in html format
+     */
+    public static function getDateFormatSelectOptions($selectedValue)
+    {
+        $selectedValue = StringUtils::getIntegerValue($selectedValue);
+        $data = HtmlControls::ArrayToSelectOptions(config('settings.date_format'), '');
+        return HtmlControls::GenerateDropDownList($data, ['value' => $selectedValue, 'valueField' => 'value', 'textField' => 'label']);
+    }
+
+    /**
+     * get date format separator for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected product id
+     * @return {string} dropdown data, in html format
+     */
+    public static function getDateFormatSeparatorSelectOptions($selectedValue)
+    {
+        $selectedValue = StringUtils::getIntegerValue($selectedValue);
+        $data = HtmlControls::ArrayToSelectOptions(config('settings.date_format_separator'), '');
+        return HtmlControls::GenerateDropDownList($data, ['value' => $selectedValue, 'valueField' => 'value', 'textField' => 'label']);
+    }
 }

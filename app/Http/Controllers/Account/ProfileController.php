@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Helpers\FileUtils;
 use App\Helpers\Form;
-use App\Helpers\HtmlControls;
 use App\Helpers\SelectUtils;
-use App\Helpers\StringUtils;
 use App\Helpers\UserUtils;
 use App\Http\Controllers\Controller;
 use App\Mail\Account\AccountDelete;
@@ -26,6 +24,7 @@ class ProfileController extends Controller
 {
     protected $viewPath = 'account';
     protected $routePath = 'account/settings';
+    protected $translationPrefix = 'account.';
 
     public function __construct()
     {
@@ -40,7 +39,9 @@ class ProfileController extends Controller
     {
         // add_measure('now', LARAVEL_START, microtime(true));
         $data = $this->getUserProfile();
-        $page = (object) ['title' => __('account.Account'), 'name' => __('account.Profile'), 'route' => route('account/profile')];
+        $page = (object) ['title' => __($this->translationPrefix . 'Account'), 'name' => __($this->translationPrefix . 'Profile'),
+            'route' => route('account/profile'),
+            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath];
         $breadcrumbPath = 'account';
         return view($this->viewPath . '.profile', compact('data', 'page', 'breadcrumbPath'));
     }
@@ -54,15 +55,16 @@ class ProfileController extends Controller
         $data = $this->getUser();
         $editFields = ['first_name', 'last_name', 'currency', 'date_format', 'date_format_separator'];
         Form::updateModelFromRequest(request()->old(), $data, $editFields);
-        $this->formatUserDataFromRequestOld($data);
 
-        $dateFormatSelectOptions = $this->getDateFormatSelectOptions($data->date_format);
-        $dateFormatSeparatorSelectOptions = $this->getDateFormatSeparatorSelectOptions($data->date_format_separator);
+        $dateFormatSelectOptions = SelectUtils::getDateFormatSelectOptions($data->date_format);
+        $dateFormatSeparatorSelectOptions = SelectUtils::getDateFormatSeparatorSelectOptions($data->date_format_separator);
 
         $userId = $data->user_id;
 
         $currencySelectOptions = SelectUtils::getCurrencySelectOptions($data->currency);
-        $page = (object) ['title' => __('account.Account'), 'name' => 'Settings', 'route' => 'settings'];
+        $page = (object) ['title' => __($this->translationPrefix . 'Account'), 'name' => 'Settings', 'route' => 'settings',
+            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath,
+        ];
         $breadcrumbPath = 'account';
         return view($this->viewPath . '.settings', compact('data', 'page', 'currencySelectOptions', 'breadcrumbPath',
             'dateFormatSelectOptions', 'dateFormatSeparatorSelectOptions'));
@@ -79,7 +81,7 @@ class ProfileController extends Controller
         $this->saveUser($request);
         $userInfo = $this->saveUserInfo($request);
         UserUtils::updateUserSetting(auth()->user()->id, $userInfo);
-        return redirect()->route($this->routePath)->with(['success' => __('account.ProfileUpdatedSuccess')]);
+        return redirect()->route($this->routePath)->with(['success' => __($this->translationPrefix . 'ProfileUpdatedSuccess')]);
     }
 
     /**
@@ -126,33 +128,6 @@ class ProfileController extends Controller
         $data->avatar_card = FileUtils::getUserAvatarUrl($data, '160x160', 'user/picture');
         $data->avatar_edit = FileUtils::getUserAvatarUrl($data, '125x125', 'user/picture');
         $data->hasAvatar = strpos($data->avatar_card, 'blank.png') === false;
-    }
-
-    /**
-     * format user for display from request()->old()
-     * @param {object} $data user model
-     */
-    private function formatUserDataFromRequestOld($data)
-    {
-        // format the numeric fields and the communication when they are taken from request()->old()
-        if (!empty(request()->old())) {
-            if (isset($data->timezone)) {
-                $data->timezone = StringUtils::getIntegerValue($data->timezone);
-            }
-            if (isset($data->marketing)) {
-                $data->marketing = StringUtils::getIntegerValue($data->marketing);
-            }
-            if (isset(request()->old()['communication'])) {
-                $communicationList = [];
-                $communicationData = request()->old()['communication'];
-                foreach ($communicationData as $communicationKey => $val) {
-                    $communicationList[$val] = 1;
-                }
-                $data->communication = (object) $communicationList;
-            } else {
-                $data->communication = [];
-            }
-        }
     }
 
     /**
@@ -228,7 +203,7 @@ class ProfileController extends Controller
     {
         $this->validatePasswordUpdateRequest($request);
         $this->savePassword($request);
-        return redirect()->route($this->routePath)->with(['success' => __('account.PasswordUpdatedSuccess')]);
+        return redirect()->route($this->routePath)->with(['success' => __($this->translationPrefix . 'PasswordUpdatedSuccess')]);
     }
 
     private function validatePasswordUpdateRequest(Request $request)
@@ -238,7 +213,7 @@ class ProfileController extends Controller
             'current_password' => ['required', 'string', 'max:255',
                 function ($attribute, $value, $fail) use ($userPassword) {
                     if (!\Hash::check($value, $userPassword)) {
-                        return $fail(__('account.CurrentPasswordNotMatch'));
+                        return $fail(__($this->translationPrefix . 'CurrentPasswordNotMatch'));
                     }
                 },
             ],
@@ -274,7 +249,7 @@ class ProfileController extends Controller
         if ($updateUser) {
             $user->save();
         }
-        return redirect()->route($this->routePath)->with(['success' => __('account.ConnectedAccountsUpdatedSuccess')]);
+        return redirect()->route($this->routePath)->with(['success' => __($this->translationPrefix . 'ConnectedAccountsUpdatedSuccess')]);
     }
     /** Update connected accounts - END */
 
@@ -301,7 +276,7 @@ class ProfileController extends Controller
 
         Mail::to($user->email)->send(new AccountDelete($message));
 
-        return redirect()->route($this->routePath)->with(['success' => __('account.AccountDeletedMailSent')]);
+        return redirect()->route($this->routePath)->with(['success' => __($this->translationPrefix . 'AccountDeletedMailSent')]);
     }
 
     private function createDeleteEntry($userId, $email, $accessToken)
@@ -313,7 +288,7 @@ class ProfileController extends Controller
                 $now = \Carbon\Carbon::now();
                 $diffMinutes = $requestDate->diffInMinutes($now);
                 if ($diffMinutes < 5) {
-                    return redirect()->route($this->routePath)->withErrors(['error' => __('account.AccountDeletedMailFrequency')]);
+                    return redirect()->route($this->routePath)->withErrors(['error' => __($this->translationPrefix . 'AccountDeletedMailFrequency')]);
                 }
             }
         } else {
@@ -330,7 +305,7 @@ class ProfileController extends Controller
 
     public function confirmDeleteAccount(Request $request)
     {
-        $data = (object) ['css' => 'text-danger', 'title' => __('account.AccountDeletedErrorTitle'), 'info' => __('account.AccountDeletedErrorInfo')];
+        $data = (object) ['css' => 'text-danger', 'title' => __($this->translationPrefix . 'AccountDeletedErrorTitle'), 'info' => __($this->translationPrefix . 'AccountDeletedErrorInfo')];
         if (!$request->route()->parameter('token')) {
             return view('auth.account-deleted', compact('data'));
         }
@@ -347,7 +322,7 @@ class ProfileController extends Controller
         }
 
         if ($validRequest) {
-            $data = (object) ['css' => 'text-success', 'title' => __('account.AccountDeletedSuccessTitle'), 'info' => __('account.AccountDeletedSuccessInfo')];
+            $data = (object) ['css' => 'text-success', 'title' => __($this->translationPrefix . 'AccountDeletedSuccessTitle'), 'info' => __($this->translationPrefix . 'AccountDeletedSuccessInfo')];
             $userDelete->delete();
             // also delete user
             $this->deleteUserAccount($userDelete->email);
@@ -368,26 +343,4 @@ class ProfileController extends Controller
         }
     }
     /** Delete account - END */
-
-    /**
-     * get date format for dropdown, in html format, for the given $selectedValue
-     * @param {number} $selectedValue selected product id
-     * @return {string} dropdown data, in html format
-     */
-    private function getDateFormatSelectOptions($selectedValue)
-    {
-        $data = HtmlControls::ArrayToSelectOptions(config('settings.date_format'), '');
-        return HtmlControls::GenerateDropDownList($data, ['value' => $selectedValue, 'valueField' => 'value', 'textField' => 'label']);
-    }
-
-    /**
-     * get date format separator for dropdown, in html format, for the given $selectedValue
-     * @param {number} $selectedValue selected product id
-     * @return {string} dropdown data, in html format
-     */
-    private function getDateFormatSeparatorSelectOptions($selectedValue)
-    {
-        $data = HtmlControls::ArrayToSelectOptions(config('settings.date_format_separator'), '');
-        return HtmlControls::GenerateDropDownList($data, ['value' => $selectedValue, 'valueField' => 'value', 'textField' => 'label']);
-    }
 }

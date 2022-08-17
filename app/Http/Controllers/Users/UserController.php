@@ -8,11 +8,8 @@ use App\Helpers\FileUtils;
 use App\Helpers\Form;
 use App\Helpers\HtmlControls;
 use App\Helpers\SelectUtils;
-use App\Helpers\StringUtils;
 use App\Http\Controllers\Controller;
-use App\Models\Country;
 use App\Models\Currency;
-use App\Models\Language;
 use App\Models\Timezone;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -35,9 +32,8 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->editFields = ['first_name', 'last_name', 'email', 'password', 'company', 'phone',
-            'website', 'country', 'language', 'timezone', 'currency', 'status',
-            'marketing', 'communication', 'type'];
+        $this->editFields = ['first_name', 'last_name', 'email', 'password', 'currency', 'status',
+            'date_format', 'date_format_separator'];
     }
 
     /**
@@ -46,7 +42,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'route' => '', 'routeCreate' => route($this->routePath . '/create')];
+        $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'route' => '', 'routeCreate' => route($this->routePath . '/create'),
+            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath];
         $breadcrumbPath = 'users';
         $statusFilter = HtmlControls::ArrayToCheckedList(config('settings.user_status'), 'general.Status.');
         $googleSelectOptions = HtmlControls::GenerateDropDownListBoolean('');
@@ -149,21 +146,19 @@ class UserController extends Controller
         }
 
         Form::updateModelFromRequest(request()->old(), $data, $this->editFields);
-        // $this->formatUserData($data);
-        $this->formatUserDataFromRequestOld($data);
 
-        $countrySelectOptions = SelectUtils::getCountrySelectOptions($data->country);
-        $languageSelectOptions = SelectUtils::getLanguageSelectOptions($data->language);
-        $timezoneSelectOptions = SelectUtils::getTimezoneSelectOptions($data->timezone);
+        $dateFormatSelectOptions = SelectUtils::getDateFormatSelectOptions($data->date_format);
+        $dateFormatSeparatorSelectOptions = SelectUtils::getDateFormatSeparatorSelectOptions($data->date_format_separator);
         $currencySelectOptions = SelectUtils::getCurrencySelectOptions($data->currency);
 
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __($this->translationPrefix . 'CreateNew'),
             'route' => route($this->routePath . '/create'), 'routeSave' => route($this->routePath . '/store'),
+            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath,
         ];
         $breadcrumbPath = 'users';
         return view($this->viewPath . '.edit',
-            compact('data', 'page', 'countrySelectOptions', 'languageSelectOptions',
-                'timezoneSelectOptions', 'currencySelectOptions', 'breadcrumbPath'));
+            compact('data', 'page', 'dateFormatSeparatorSelectOptions', 'dateFormatSelectOptions',
+                'currencySelectOptions', 'breadcrumbPath'));
     }
 
     /**
@@ -187,19 +182,19 @@ class UserController extends Controller
     {
         $data = $this->getItemForEdit($id);
         Form::updateModelFromRequest(request()->old(), $data, $this->editFields);
-        $this->formatUserDataFromRequestOld($data);
 
-        $countrySelectOptions = SelectUtils::getCountrySelectOptions($data->country);
-        $languageSelectOptions = SelectUtils::getLanguageSelectOptions($data->language);
-        $timezoneSelectOptions = SelectUtils::getTimezoneSelectOptions($data->timezone);
+        $dateFormatSelectOptions = SelectUtils::getDateFormatSelectOptions($data->date_format);
+        $dateFormatSeparatorSelectOptions = SelectUtils::getDateFormatSeparatorSelectOptions($data->date_format_separator);
         $currencySelectOptions = SelectUtils::getCurrencySelectOptions($data->currency);
 
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __('tables.Edit') . ': ' . $data->name,
             'route' => route($this->routePath . '/edit', ['id' => $id]),
             'routeSave' => route($this->routePath . '/update', ['id' => $id]),
+            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath,
         ];
         $breadcrumbPath = 'users';
-        return view($this->viewPath . '.edit', compact('data', 'page', 'countrySelectOptions', 'languageSelectOptions', 'timezoneSelectOptions', 'currencySelectOptions', 'breadcrumbPath'));
+        return view($this->viewPath . '.edit', compact('data', 'page', 'dateFormatSelectOptions', 'dateFormatSeparatorSelectOptions',
+            'currencySelectOptions', 'breadcrumbPath'));
     }
 
     /**
@@ -213,7 +208,10 @@ class UserController extends Controller
         $this->validateItemUpdateRequest($request);
 
         $this->saveItem($request, $id);
-        $this->saveUserInfo($request, $id);
+        $userInfo = $this->saveUserInfo($request, $id);
+        if ($id === auth()->user()->id) {
+            UserUtils::updateUserSetting(auth()->user()->id, $userInfo);
+        }
         return redirect()->route($this->routePath . '/edit', ['id' => $id])->with(['success' => __('general.UpdatedSuccess')]);
     }
 
@@ -324,8 +322,8 @@ class UserController extends Controller
     {
         $data = $this->model::leftJoin('user_infos', 'users.id', '=', 'user_infos.user_id')
             ->select(['users.id', 'user_id', 'first_name', 'last_name', 'email', 'google_id', 'fb_id', 'status',
-                'avatar', 'company', 'phone', 'website', 'country', 'language', 'timezone',
-                'currency', 'communication', 'marketing', 'user_infos.updated_at'])
+                'avatar', 'date_format', 'date_format_separator',
+                'currency', 'user_infos.updated_at'])
             ->findOrFail($itemId);
 
         $this->formatUserData($data);
@@ -348,33 +346,6 @@ class UserController extends Controller
         $data->avatar_card = FileUtils::getUserAvatarUrl($data, '160x160', 'user/picture');
         $data->avatar_edit = FileUtils::getUserAvatarUrl($data, '125x125', 'user/picture');
         $data->hasAvatar = strpos($data->avatar_card, 'blank.png') === false;
-    }
-
-    /**
-     * format user for display from request()->old()
-     * @param {object} $data user model
-     */
-    private function formatUserDataFromRequestOld($data)
-    {
-        // format the numeric fields and the communication when they are taken from request()->old()
-        if (!empty(request()->old())) {
-            if (isset($data->timezone)) {
-                $data->timezone = StringUtils::getIntegerValue($data->timezone);
-            }
-            if (isset($data->marketing)) {
-                $data->marketing = StringUtils::getIntegerValue($data->marketing);
-            }
-            if (isset(request()->old()['communication'])) {
-                $communicationList = [];
-                $communicationData = request()->old()['communication'];
-                foreach ($communicationData as $communicationKey => $val) {
-                    $communicationList[$val] = 1;
-                }
-                $data->communication = (object) $communicationList;
-            } else {
-                $data->communication = [];
-            }
-        }
     }
 
     /**
@@ -452,7 +423,6 @@ class UserController extends Controller
             'email' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'last_name' => ['required', 'string', 'max:255'],
-            'country' => ['required', 'string', 'max:255'],
         ];
         $request->validate($validationFields);
     }
@@ -467,7 +437,6 @@ class UserController extends Controller
         $validationFields = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'country' => ['required', 'string', 'max:255'],
         ];
         $request->validate($validationFields);
     }
@@ -513,10 +482,7 @@ class UserController extends Controller
             $userInfo = new UserInfo();
             $userInfo->user_id = $itemId;
         }
-        $updateFields = ['company', 'phone', 'website', 'country', 'language', 'timezone', 'currency',
-            ['field' => 'marketing', 'type' => 'bool'],
-            ['field' => 'communication', 'type' => 'bool_array'],
-        ];
+        $updateFields = ['date_format', 'date_format_separator', 'currency'];
         Form::updateModelFromRequest($request, $userInfo, $updateFields);
 
         $storeOptions = ['newFileName' => 'avatar'];
@@ -533,6 +499,8 @@ class UserController extends Controller
         }
 
         $userInfo->save();
+
+        return $userInfo;
     }
 
     /** functions used to create / update user - END */

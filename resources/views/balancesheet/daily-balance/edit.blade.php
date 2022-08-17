@@ -162,9 +162,6 @@
 <script src="{{ asset('vendors/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/moment.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/daterangepicker.js') }}"></script>
-@endsection
-
-@section('theme_js_files')
 <script src="{{ asset('vendors/jquery-validate/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendors/jquery-validate/additional-methods.min.js') }}"></script>
 @endsection

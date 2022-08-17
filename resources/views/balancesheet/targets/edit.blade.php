@@ -74,9 +74,6 @@
 @section('vendor_js_files')
 <script src="{{ asset('vendors/i18next/i18next.min.js') }}"></script>
 <script src="{{ asset('vendors/sweetalert2/sweetalert2.min.js') }}"></script>
-@endsection
-
-@section('theme_js_files')
 <script src="{{ asset('vendors/jquery-validate/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendors/jquery-validate/additional-methods.min.js') }}"></script>
 @endsection

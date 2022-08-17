@@ -152,111 +152,6 @@
                             <!--begin::Input group-->
                             <div class="row mb-6">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Company') }}</label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <input type="text" name="company"
-                                        class="form-control form-control-lg form-control-solid"
-                                        placeholder="{{ __('account.Company') }}" value="{{ $data->company }}" />
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
-                                <label
-                                    class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.ContactPhone') }}</label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <input type="tel" name="phone"
-                                        class="form-control form-control-lg form-control-solid"
-                                        placeholder="{{ __('account.PhoneNumber') }}" value="{{ $data->phone }}" />
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
-                                <label
-                                    class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.CompanySite') }}</label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <input type="text" name="website"
-                                        class="form-control form-control-lg form-control-solid"
-                                        placeholder="{{ __('account.CompanySite') }}" value="{{ $data->website }}" />
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                    <span class="required">{{ __('account.Country') }}</span>
-                                    <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip"
-                                        title="{{ __('account.CountryOfOrigination') }}"></i>
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <select name="country" aria-label="{{ __('account.SelectCountry') }}" data-control="select2"
-                                        data-placeholder="{{ __('account.SelectCountry') }}" data-kt-flags="true"
-                                        class="form-select form-select-solid form-select-lg fw-bold">
-                                        <option value="">{{ __('account.SelectCountry') }}</option>
-                                        {!! $countrySelectOptions !!}
-                                    </select>
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
-                                <label
-                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('account.Language') }}</label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <!--begin::Input-->
-                                    <select name="language" aria-label="{{ __('account.SelectLanguage') }}" data-control="select2"
-                                        data-placeholder="{{ __('account.SelectLanguage') }}" data-kt-flags="true"
-                                        class="form-select form-select-solid form-select-lg">
-                                        <option value="">{{ __('account.SelectLanguage') }}</option>
-                                        {!! $languageSelectOptions !!}
-                                    </select>
-                                    <!--end::Input-->
-                                    <!--begin::Hint-->
-                                    <div class="form-text">{{ __('account.SelectPreferredLanguage') }}</div>
-                                    <!--end::Hint-->
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.TimeZone') }}</label>
-                                <!--end::Label-->
-                                <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <select name="timezone" aria-label="{{ __('account.SelectTimezone') }}" data-control="select2"
-                                        data-placeholder="{{ __('account.SelectTimezone') }}"
-                                        class="form-select form-select-solid form-select-lg">
-                                        <option value="">{{ __('account.SelectTimezone') }}</option>
-                                        {!! $timezoneSelectOptions !!}
-                                    </select>
-                                </div>
-                                <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-6">
-                                <!--begin::Label-->
                                 <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Currency') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
@@ -275,50 +170,29 @@
                             <div class="row mb-6">
                                 <!--begin::Label-->
                                 <label
-                                    class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Communication') }}</label>
+                                    class="col-lg-4 col-form-label fw-bold fs-6">{{ __('tables.DateFormat') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
-                                <div class="col-lg-8 fv-row">
-                                    <!--begin::Options-->
-                                    <div class="d-flex align-items-center mt-3">
-                                        <!--begin::Option-->
-                                        <label class="form-check form-check-inline form-check-solid me-5">
-                                            <input class="form-check-input" name="communication[]" type="checkbox"
-                                                value="email"
-                                                {{ isset($data->communication->email) ? 'checked="checked"' : '' }} />
-                                            <span class="fw-bold ps-2 fs-6">{{ __('account.Email') }}</span>
-                                        </label>
-                                        <!--end::Option-->
-                                        <!--begin::Option-->
-                                        <label class="form-check form-check-inline form-check-solid">
-                                            <input class="form-check-input" name="communication[]" type="checkbox"
-                                                value="phone"
-                                                {{ isset($data->communication->phone) ? 'checked="checked"' : '' }} />
-                                            <span class="fw-bold ps-2 fs-6">{{ __('account.Phone') }}</span>
-                                        </label>
-                                        <!--end::Option-->
-                                    </div>
-                                    <!--end::Options-->
+                                <div class="col-lg-4">
+                                    <select name="date_format" aria-label="{{ __('account.SelectDateFormat') }}" data-control="select2"
+                                        data-placeholder="{{ __('account.SelectDateFormat') }}"
+                                        data-allow-clear="true" class="form-select form-select-solid form-select-lg">
+                                        <option value="">{{ __('account.SelectDateFormat') }}</option>
+                                        {!! $dateFormatSelectOptions !!}
+                                    </select>
                                 </div>
                                 <!--end::Col-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-0">
-                                <!--begin::Label-->
-                                <label
-                                    class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.AllowMarketing') }}</label>
-                                <!--begin::Label-->
-                                <!--begin::Label-->
-                                <div class="col-lg-8 d-flex align-items-center">
-                                    <div class="form-check form-check-solid form-switch fv-row">
-                                        <input class="form-check-input w-45px h-30px" type="checkbox" name="marketing"
-                                            value="1" id="marketing"
-                                            {{ $data->marketing ? 'checked="checked"' : '' }} />
-                                        <label class="form-check-label" for="marketing"></label>
-                                    </div>
+                                <!--begin::Col-->
+                                <div class="col-lg-4">
+                                    <select name="date_format_separator" aria-label="{{ __('account.SelectDateFormatSeparator') }}"
+                                        data-control="select2"
+                                        data-placeholder="{{ __('account.SelectDateFormatSeparator') }}"
+                                        data-allow-clear="true" class="form-select form-select-solid form-select-lg">
+                                        <option value="">{{ __('account.SelectDateFormatSeparator') }}</option>
+                                        {!! $dateFormatSeparatorSelectOptions !!}
+                                    </select>
                                 </div>
-                                <!--end::Label-->
+                                <!--end::Col-->
                             </div>
                             <!--end::Input group-->
                             <!--begin::Input group-->
@@ -506,9 +380,6 @@
 @section('vendor_js_files')
 <script src="{{ asset('vendors/i18next/i18next.min.js') }}"></script>
 <script src="{{ asset('vendors/sweetalert2/sweetalert2.min.js') }}"></script>
-@endsection
-
-@section('theme_js_files')
 <script src="{{ asset('vendors/jquery-validate/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendors/jquery-validate/additional-methods.min.js') }}"></script>
 @endsection

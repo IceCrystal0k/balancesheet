@@ -1,5 +1,4 @@
-@extends('partials.page.export', ['exportTitle' => __('user.ExportItems'), 'exportRoute' =>
-route('users/export')])
+@extends('partials.page.export', ['exportTitle' => __($page->translationPrefix.'ExportItems'), 'exportRoute' => route($page->routePath.'/export')])
 @section('export_content')
 <!--begin::Row-->
 <div class="row fv-row mb-15">

@@ -1,4 +1,4 @@
-@extends('partials.page.filter', ['globalSearchPlaceholder' => __('user.SearchTable'), 'createNewLabel' =>
+@extends('partials.page.filter', ['globalSearchPlaceholder' => __($page->translationPrefix.'SearchTable'), 'createNewLabel' =>
 __('user.CreateNew')])
 @section('filter_content')
 <!--begin::Input group-->

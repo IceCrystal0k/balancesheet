@@ -12,7 +12,7 @@ return [
     | location for this type of information, allowing packages to have
     | a conventional file to locate the various service credentials.
     |
-    */
+     */
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
@@ -31,15 +31,15 @@ return [
     ],
 
     'google' => [
-        'client_id' => '47277923221-cdfira2dm3trl55892ga2epq3o2ia4pi.apps.googleusercontent.com',
-        'client_secret' => 'T2h78M4PvLyc_AyrNkzLj6MD',
-        'redirect' => 'http://localhost/auth/google/callback'
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => 'http://localhost/auth/google/callback',
     ],
 
     'facebook' => [
-        'client_id' => '132105160269158',
-        'client_secret' => '5371fb322f11a0bf413c2860ebc6e1ea',
-        'redirect' => 'https://localhost/auth/facebook/callback'
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => 'https://localhost/auth/facebook/callback',
     ],
 
     "apple" => [

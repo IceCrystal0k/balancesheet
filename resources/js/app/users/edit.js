@@ -155,14 +155,10 @@ let KTUserEdit = (function () {
         let rules = {
             first_name: 'required',
             last_name: 'required',
-            country: 'required',
-            language: 'required',
         };
         let messages = {
             first_name: i18n.t('auth.FirstNameRequired'),
             last_name: i18n.t('auth.LastNameRequired'),
-            country: i18n.t('account.CountryRequired'),
-            language: i18n.t('account.LanguageRequired'),
         };
         if (!editId) {
             rules.email = { required: true, email: true };

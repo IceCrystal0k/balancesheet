@@ -50,13 +50,13 @@
                 <!--begin::Nav item-->
                 <li class="nav-item">
                     <a class="nav-link text-active-primary me-6 {{ $selectedMenu === 'profile' ? 'active' : '' }}"
-                        href="{{ route('account/profile') }}">{{ __('account.Profile') }}</a>
+                        href="{{ route('account/profile') }}">{{ __($page->translationPrefix.'Profile') }}</a>
                 </li>
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 <li class="nav-item">
                     <a class="nav-link text-active-primary me-6 {{ $selectedMenu === 'settings' ? 'active' : '' }}"
-                        href="{{ route('account/settings') }}">{{ __('account.Settings') }}</a>
+                        href="{{ route('account/settings') }}">{{ __($page->translationPrefix.'Settings') }}</a>
                 </li>
                 <!--end::Nav item-->
             </ul>

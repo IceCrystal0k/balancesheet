@@ -19,7 +19,7 @@ let getFiles = function (dir) {
  | file for the application as well as bundling up all the JS files.
  |
  */
-/*
+
 mix
     // theme css
     .sass('resources/css/theme/sass/style.scss', 'public/css/theme/')
@@ -50,10 +50,7 @@ mix
     .copy('resources/vendors/datatables/images/', 'public/vendors/datatables/images/')
     .copy('resources/vendors/datatables/plugins/', 'public/vendors/datatables/plugins/')
     .copy('resources/vendors/i18next/i18next.min.js', 'public/vendors/i18next/')
-    .copy(
-        'resources/vendors/jquery-ui/jquery-ui-1.13.2.custom/jquery-ui.min.css',
-        'public/vendors/jquery-ui/'
-    )
+    .copy('resources/vendors/jquery-ui/jquery-ui-1.13.2.custom/jquery-ui.min.css', 'public/vendors/jquery-ui/')
     .copy(['resources/media/'], 'public/media') // copy icons
     .copy(['resources/langjs/'], 'public/lang') // copy json translations for js localization
     .copy(['resources/js/custom/'], 'public/js/custom/') // copy custom js
@@ -62,23 +59,19 @@ mix
     .copy('resources/js/theme/vendors/plugins/dropzone.init.js', 'public/js/custom/dropzone/') // copy custom js
 
     .sourceMaps();
-*/
+
 // application pages
 
 let appResFolder = 'resources/js/app/';
-/*
-let appFolders = [
-    'authentication',
-    'account',
-    'users'
-];
+
+let appFolders = ['authentication', 'account', 'users'];
 // let appFolders = ['permissions', 'pages'];
 for (let folder of appFolders) {
     getFiles(appResFolder + folder).forEach(function (filepath) {
         mix.js(appResFolder + folder + '/' + filepath, 'js/app/' + folder);
     });
 }
-*/
+
 let appModulesFolders = {
     balancesheet: ['targets', 'monthly-balance', 'daily-balance', 'services', 'statistics'],
 };
@@ -100,7 +93,7 @@ Object.keys(appModulesFolders).forEach((moduleName) => {
 //     .sourceMaps()
 
 // mix theme js files in correct order
-/*mix.combine(
+mix.combine(
     [
         'resources/js/theme/components/util.js',
         'resources/js/theme/components/blockui.js',
@@ -132,7 +125,6 @@ Object.keys(appModulesFolders).forEach((moduleName) => {
     ],
     'public/js/theme/scripts.js'
 ).sourceMaps();
-*/
 
 // --------------- partial compilation, no reason to compile all files (copied from above) ------------------ //
 

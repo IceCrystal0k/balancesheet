@@ -86,11 +86,11 @@
 <script src="{{ asset('vendors/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/moment.min.js') }}"></script>
 <script src="{{ asset('vendors/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('vendors/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('vendors/datatables/plugins/dataTables.responsive.min.js') }}"></script>
 @endsection
 
 @section('page_js_files')
-<script src="{{ asset('vendors/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('vendors/datatables/plugins/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('js/app/balancesheet/services/product.js') }}"></script>
 <script>var userDateFormat = '{{ $userDateFormat }}';</script>
 <script src="{{ asset('js/app/'.$page->routePath.'/list.js') }}"></script>
