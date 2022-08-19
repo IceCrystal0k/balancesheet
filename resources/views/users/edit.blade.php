@@ -281,7 +281,7 @@
                         <div id="email_edit" class="flex-row-fluid d-none">
                             <!--begin::Form-->
                             <form id="change_email" class="form" method="post"
-                                action="{{ route('users/update-email', ['id' => $data->id]) }}" novalidate="novalidate">
+                                action="{{ route($page->routePath.'/update-email', ['id' => $data->id]) }}" novalidate="novalidate">
                                 @csrf
                                 <div class="row mb-5">
                                     <div class="col-lg-4">
@@ -327,7 +327,7 @@
                         <div id="password_edit" class="flex-row-fluid d-none">
                             <!--begin::Form-->
                             <form id="change_password" class="form" method="post"
-                                action="{{ route('users/update-password', ['id' => $data->id]) }}"
+                                action="{{ route($page->routePath.'/update-password', ['id' => $data->id]) }}"
                                 novalidate="novalidate">
                                 @csrf
                                 <div class="row mb-1">

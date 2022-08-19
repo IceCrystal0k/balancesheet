@@ -29,7 +29,7 @@
                     @include('errors.error')
                     @include('errors.success')
                     <form id="account_settings_form" class="form" method="post"
-                        action="{{ route('account/settings/update-profile') }}" enctype="multipart/form-data">
+                        action="{{ route($page->routePath.'/update-profile') }}" enctype="multipart/form-data">
                         @csrf
                         <!--begin::Card body-->
                         <div class="card-body border-top p-9">
@@ -226,7 +226,7 @@
                         <div id="signin_password_edit" class="flex-row-fluid d-none">
                             <!--begin::Form-->
                             <form id="signin_change_password" class="form" method="post"
-                                action="{{ route('account/settings/update-password') }}" novalidate="novalidate">
+                                action="{{ route($page->routePath.'/update-password') }}" novalidate="novalidate">
                                 @csrf
                                 <div class="row mb-1">
                                     <div class="col-lg-4">
@@ -289,7 +289,7 @@
                 <div id="connected_accounts" class="collapse show">
                     <!--begin::Form-->
                     <form id="update_connected_accounts" class="form" method="post"
-                        action="{{ route('account/settings/update-connections') }}" novalidate="novalidate">
+                        action="{{ route($page->routePath.'/update-connections') }}" novalidate="novalidate">
                         @csrf
                         <!--begin::Card body-->
                         <div class="card-body border-top p-9">
@@ -391,7 +391,7 @@
                 <div id="account_delete" class="collapse show">
                     <!--begin::Form-->
                     <form id="account_delete_form" class="form" method="post"
-                        action="{{ route('account/settings/delete-account') }}" novalidate="novalidate">
+                        action="{{ route($page->routePath.'/delete-account') }}" novalidate="novalidate">
                         @csrf
                         <!--begin::Card body-->
                         <div class="card-body border-top p-9">
