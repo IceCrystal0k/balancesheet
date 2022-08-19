@@ -6,11 +6,13 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
+    protected $translationPrefix = 'dashboard.';
 
     public function index()
     {
         $start = microtime(true);
-        $page = (object) ['title' => __('menu.Dashboard'), 'name' => __('menu.Dashboard'), 'route' => ''];
+        $page = (object) ['title' => __('menu.Dashboard'), 'name' => __('menu.Dashboard'), 'route' => '',
+            'translationPrefix' => $this->translationPrefix];
         $breadcrumbPath = 'dashboard';
         $time = microtime(true) - $start;
         $data = $this->getStats();

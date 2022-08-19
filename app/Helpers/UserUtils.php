@@ -36,7 +36,7 @@ class UserUtils
 
     private static function getUserSettingsFormatted($data)
     {
-        $response = (object) ['date_format' => config('settings.date_format')[1], 'date_format_php' => config('settings.date_format')[1], 'currency' => 'EUR'];
+        $response = (object) ['date_format' => config('settings.date_format')[1], 'date_format_php' => config('settings.date_format_php')[1], 'currency' => 'EUR'];
         if ($data) {
             if ($data->currency) {
                 $response->currency = $data->currency;

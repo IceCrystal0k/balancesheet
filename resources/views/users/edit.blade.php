@@ -36,7 +36,7 @@
                             <!--begin::Input group-->
                             <div class="row mb-6">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Avatar') }}</label>
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __($page->translationPrefix.'Avatar') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8">
@@ -51,7 +51,7 @@
                                         <label
                                             class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                             data-kt-image-input-action="change" data-bs-toggle="tooltip"
-                                            title="{{ __('account.ChangeAvatar') }}">
+                                            title="{{ __($page->translationPrefix.'ChangeAvatar') }}">
                                             <i class="bi bi-pencil-fill fs-7"></i>
                                             <!--begin::Inputs-->
                                             <input type="file" name="avatar" accept="image/png,image/jpeg" />
@@ -63,7 +63,7 @@
                                         <span
                                             class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                             data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
-                                            title="{{ __('account.CancelAvatar') }}">
+                                            title="{{ __($page->translationPrefix.'CancelAvatar') }}">
                                             <i class="bi bi-x fs-2"></i>
                                         </span>
                                         <!--end::Cancel-->
@@ -72,7 +72,7 @@
                                         <span
                                             class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                             data-kt-image-input-action="remove" data-bs-toggle="tooltip"
-                                            title="{{ __('account.RemoveAvatar') }}">
+                                            title="{{ __($page->translationPrefix.'RemoveAvatar') }}">
                                             <i class="bi bi-x fs-2"></i>
                                         </span>
                                         @endif
@@ -80,7 +80,7 @@
                                     </div>
                                     <!--end::Image input-->
                                     <!--begin::Hint-->
-                                    <div class="form-text">{{ __('account.AllowedFileTypes') }}</div>
+                                    <div class="form-text">{{ __($page->translationPrefix.'AllowedFileTypes') }}</div>
                                     <!--end::Hint-->
                                 </div>
                                 <!--end::Col-->
@@ -90,7 +90,7 @@
                             <div class="row mb-6">
                                 <!--begin::Label-->
                                 <label
-                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('account.FullName') }}</label>
+                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __($page->translationPrefix.'FullName') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8">
@@ -100,7 +100,7 @@
                                         <div class="col-lg-6 fv-row">
                                             <input type="text" name="first_name"
                                                 class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                placeholder="{{ __('account.FirstName') }}"
+                                                placeholder="{{ __($page->translationPrefix.'FirstName') }}"
                                                 value="{{ $data->first_name }}" />
                                         </div>
                                         <!--end::Col-->
@@ -108,7 +108,7 @@
                                         <div class="col-lg-6 fv-row">
                                             <input type="text" name="last_name"
                                                 class="form-control form-control-lg form-control-solid"
-                                                placeholder="{{ __('account.LastName') }}"
+                                                placeholder="{{ __($page->translationPrefix.'LastName') }}"
                                                 value="{{ $data->last_name }}" />
                                         </div>
                                         <!--end::Col-->
@@ -123,13 +123,13 @@
                             <div class="row mb-6">
                                 <!--begin::Label-->
                                 <label
-                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('account.Email') }}</label>
+                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __($page->translationPrefix.'Email') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
                                     <input type="email" name="email"
                                         class="form-control form-control-lg form-control-solid"
-                                        placeholder="{{ __('account.Email') }}" value="{{ $data->email }}" />
+                                        placeholder="{{ __($page->translationPrefix.'Email') }}" value="{{ $data->email }}" />
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -138,13 +138,13 @@
                             <div class="row mb-6">
                                 <!--begin::Label-->
                                 <label
-                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('account.Password') }}</label>
+                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __($page->translationPrefix.'Password') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
                                     <input type="password" name="password"
                                         class="form-control form-control-lg form-control-solid"
-                                        placeholder="{{ __('account.Password') }}" value="{{ $data->password }}" />
+                                        placeholder="{{ __($page->translationPrefix.'Password') }}" value="{{ $data->password }}" />
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -152,14 +152,14 @@
                             <!--begin::Input group-->
                             <div class="row mb-6">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Currency') }}</label>
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __($page->translationPrefix.'Currency') }}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <select name="currency" aria-label="{{ __('account.SelectCurrency') }}" data-control="select2"
-                                        data-placeholder="{{ __('account.SelectCurrency') }}" data-kt-flags="true"
+                                    <select name="currency" aria-label="{{ __($page->translationPrefix.'SelectCurrency') }}" data-control="select2"
+                                        data-placeholder="{{ __($page->translationPrefix.'SelectCurrency') }}" data-kt-flags="true"
                                         class="form-select form-select-solid form-select-lg">
-                                        <option value="">{{ __('account.SelectCurrency') }}</option>
+                                        <option value="">{{ __($page->translationPrefix.'SelectCurrency') }}</option>
                                         {!! $currencySelectOptions !!}
                                     </select>
                                 </div>
@@ -174,21 +174,21 @@
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-4">
-                                    <select name="date_format" aria-label="{{ __('account.SelectDateFormat') }}" data-control="select2"
-                                        data-placeholder="{{ __('account.SelectDateFormat') }}"
+                                    <select name="date_format" aria-label="{{ __($page->translationPrefix.'SelectDateFormat') }}" data-control="select2"
+                                        data-placeholder="{{ __($page->translationPrefix.'SelectDateFormat') }}"
                                         data-allow-clear="true" class="form-select form-select-solid form-select-lg">
-                                        <option value="">{{ __('account.SelectDateFormat') }}</option>
+                                        <option value="">{{ __($page->translationPrefix.'SelectDateFormat') }}</option>
                                         {!! $dateFormatSelectOptions !!}
                                     </select>
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
                                 <div class="col-lg-4">
-                                    <select name="date_format_separator" aria-label="{{ __('account.SelectDateFormatSeparator') }}"
+                                    <select name="date_format_separator" aria-label="{{ __($page->translationPrefix.'SelectDateFormatSeparator') }}"
                                         data-control="select2"
-                                        data-placeholder="{{ __('account.SelectDateFormatSeparator') }}"
+                                        data-placeholder="{{ __($page->translationPrefix.'SelectDateFormatSeparator') }}"
                                         data-allow-clear="true" class="form-select form-select-solid form-select-lg">
-                                        <option value="">{{ __('account.SelectDateFormatSeparator') }}</option>
+                                        <option value="">{{ __($page->translationPrefix.'SelectDateFormatSeparator') }}</option>
                                         {!! $dateFormatSeparatorSelectOptions !!}
                                     </select>
                                 </div>
@@ -198,7 +198,7 @@
                             <!--begin::Input group-->
                             <div class="row mb-0">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Active') }}</label>
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __($page->translationPrefix.'Active') }}</label>
                                 <!--begin::Label-->
                                 <!--begin::Label-->
                                 <div class="col-lg-8 d-flex align-items-center">
@@ -215,9 +215,9 @@
                             <!--begin::Input group-->
                             <div class="row mb-0">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('account.Google') }}
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __($page->translationPrefix.'Google') }}
                                     <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip"
-                                        title="{{ __('account.GoogleInfo') }}"></i>
+                                        title="{{ __($page->translationPrefix.'GoogleInfo') }}"></i>
                                 </label>
                                 <!--begin::Label-->
                                 <!--begin::Label-->
@@ -255,7 +255,7 @@
                 <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
                     data-bs-target="#signin_method">
                     <div class="card-title m-0">
-                        <h3 class="fw-bolder m-0">{{ __('account.SignInMethod') }}</h3>
+                        <h3 class="fw-bolder m-0">{{ __($page->translationPrefix.'SignInMethod') }}</h3>
                     </div>
                 </div>
                 <!--end::Card header-->
@@ -267,13 +267,13 @@
                         <div class="d-flex flex-wrap align-items-center mb-10">
                             <!--begin::Label-->
                             <div id="email">
-                                <div class="fs-6 fw-bolder mb-1">{{ __('account.Email') }}</div>
+                                <div class="fs-6 fw-bolder mb-1">{{ __($page->translationPrefix.'Email') }}</div>
                                 <div class="fw-bold text-gray-600">{{ $data->email }}</div>
                             </div>
                             <!--begin::Action-->
                             <div id="email_button" class="ms-auto">
                                 <button
-                                    class="btn btn-light btn-active-light-primary">{{ __('account.ChangeEmail') }}</button>
+                                    class="btn btn-light btn-active-light-primary">{{ __($page->translationPrefix.'ChangeEmail') }}</button>
                             </div>
                             <!--end::Action-->
                         </div>
@@ -287,7 +287,7 @@
                                     <div class="col-lg-4">
                                         <div class="fv-row mb-0">
                                             <label for="new_email"
-                                                class="form-label fs-6 fw-bolder mb-3">{{ __('account.NewEmail') }}</label>
+                                                class="form-label fs-6 fw-bolder mb-3">{{ __($page->translationPrefix.'NewEmail') }}</label>
                                             <input type="email" class="form-control form-control-lg form-control-solid"
                                                 name="new_email" id="new_email" />
                                         </div>
@@ -295,7 +295,7 @@
                                 </div>
                                 <div class="d-flex">
                                     <button id="email_submit" type="button"
-                                        class="btn btn-primary me-2 px-6">{{ __('account.UpdateEmail') }}</button>
+                                        class="btn btn-primary me-2 px-6">{{ __($page->translationPrefix.'UpdateEmail') }}</button>
                                     <button id="email_cancel" type="button"
                                         class="btn btn-color-gray-400 btn-active-light-primary px-6">{{ __('general.Cancel') }}</button>
                                 </div>
@@ -311,14 +311,14 @@
                         <div class="d-flex flex-wrap align-items-center mb-10">
                             <!--begin::Label-->
                             <div id="password">
-                                <div class="fs-6 fw-bolder mb-1">{{ __('account.Password') }}</div>
+                                <div class="fs-6 fw-bolder mb-1">{{ __($page->translationPrefix.'Password') }}</div>
                                 <div class="fw-bold text-gray-600">************</div>
                             </div>
                             <!--end::Label-->
                             <!--begin::Action-->
                             <div id="password_button" class="ms-auto">
                                 <button
-                                    class="btn btn-light btn-active-light-primary">{{ __('account.ChangePassword') }}</button>
+                                    class="btn btn-light btn-active-light-primary">{{ __($page->translationPrefix.'ChangePassword') }}</button>
                             </div>
                             <!--end::Action-->
                         </div>
@@ -334,17 +334,17 @@
                                     <div class="col-lg-4">
                                         <div class="fv-row mb-0">
                                             <label for="new_password"
-                                                class="form-label fs-6 fw-bolder mb-3">{{ __('account.NewPassword') }}</label>
+                                                class="form-label fs-6 fw-bolder mb-3">{{ __($page->translationPrefix.'NewPassword') }}</label>
                                             <input type="password"
                                                 class="form-control form-control-lg form-control-solid"
                                                 name="new_password" id="new_password" />
                                         </div>
-                                        <div class="form-text mb-5">{{ __('account.PasswordInfo') }}</div>
+                                        <div class="form-text mb-5">{{ __($page->translationPrefix.'PasswordInfo') }}</div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="fv-row mb-0">
                                             <label for="password_confirmation"
-                                                class="form-label fs-6 fw-bolder mb-3">{{ __('account.ConfirmNewPassword') }}</label>
+                                                class="form-label fs-6 fw-bolder mb-3">{{ __($page->translationPrefix.'ConfirmNewPassword') }}</label>
                                             <input type="password"
                                                 class="form-control form-control-lg form-control-solid"
                                                 name="password_confirmation" id="password_confirmation" />
@@ -353,7 +353,7 @@
                                 </div>
                                 <div class="d-flex">
                                     <button id="password_submit" type="button"
-                                        class="btn btn-primary me-2 px-6">{{ __('account.UpdatePassword') }}</button>
+                                        class="btn btn-primary me-2 px-6">{{ __($page->translationPrefix.'UpdatePassword') }}</button>
                                     <button id="password_cancel" type="button"
                                         class="btn btn-color-gray-400 btn-active-light-primary px-6">{{ __('general.Cancel') }}</button>
                                 </div>

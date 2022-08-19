@@ -29,7 +29,7 @@
                                 <!--end::Icon-->
                                 <!--begin::Title-->
                                 <div class="flex-grow-1 me-2">
-                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">Pending users:</span>
+                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'PendingUsers') }}:</span>
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Lable-->
@@ -44,7 +44,7 @@
                                 <!--end::Icon-->
                                 <!--begin::Title-->
                                 <div class="flex-grow-1 me-2">
-                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">Active users:</span>
+                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'ActiveUsers') }}:</span>
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Lable-->

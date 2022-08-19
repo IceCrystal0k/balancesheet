@@ -25,7 +25,7 @@
                 <div class="card-body pt-0">
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle table-row-dashed fs-6 gy-5" id="users-table"
-                            data-route="{{ route('users/list') }}">
+                            data-route="{{ route($page->routePath.'/list') }}">
                             <thead>
                                 <tr>
                                     <th class="w-10px pe-2">
@@ -75,5 +75,5 @@
 @endsection
 
 @section('page_js_files')
-<script src="{{ asset('js/app/users/list.js') }}"></script>
+<script src="{{ asset('js/app/'.$page->viewPath.'/list.js') }}"></script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BalanceSheets;
 use App\Helpers\ExportUtils;
 use App\Helpers\Form;
 use App\Helpers\HtmlControls;
+use App\Helpers\UserUtils;
 use App\Http\Controllers\Controller;
 use App\Models\Target;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class TargetController extends Controller
     protected $model = 'App\Models\Target';
     private $editFields; // fields that appear in the edit form
     private $updateFields; // fields that will be updated on save
+    private $userSettings;
 
     public function __construct()
     {
@@ -51,11 +53,12 @@ class TargetController extends Controller
      * @return {array} array with data for table
      */
     function list(Request $request) {
+        $this->userSettings = UserUtils::getUserSetting($this->userId);
         $data = $this->model::select(['id', 'name'])
             ->where('user_id', $this->userId);
         return Datatables::of($data)
             ->addColumn('updated_at', function ($item) {
-                return date(config('settings.date_format_php')[1], strtotime($item->updated_at));
+                return date($this->userSettings->date_format_php, strtotime($item->updated_at));
             })
             ->addColumn('actions', function ($item) {
                 return HtmlControls::GetActionColumn($this->routePath, $item, 'edit,delete');

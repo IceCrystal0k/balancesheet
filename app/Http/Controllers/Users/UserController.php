@@ -8,6 +8,7 @@ use App\Helpers\FileUtils;
 use App\Helpers\Form;
 use App\Helpers\HtmlControls;
 use App\Helpers\SelectUtils;
+use App\Helpers\UserUtils;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Timezone;
@@ -29,11 +30,18 @@ class UserController extends Controller
     protected $model = 'App\Models\User';
 
     private $editFields;
+    private $userSettings;
 
     public function __construct()
     {
         $this->editFields = ['first_name', 'last_name', 'email', 'password', 'currency', 'status',
             'date_format', 'date_format_separator'];
+
+        $this->middleware(function ($request, $next) {
+            $this->userSettings = UserUtils::getUserSetting(auth()->user()->id);
+            return $next($request);
+        });
+
     }
 
     /**
@@ -104,7 +112,7 @@ class UserController extends Controller
                 return HtmlControls::GetBooleanControl($item->fb_id);
             })
             ->addColumn('updated_at', function ($item) {
-                return date(config('settings.date_format_php')[1], strtotime($item->updated_at));
+                return date($this->userSettings->date_format_php, strtotime($item->updated_at));
             })
             ->addColumn('actions', function ($item) {
                 $actionColumn = null;
@@ -153,7 +161,7 @@ class UserController extends Controller
 
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __($this->translationPrefix . 'CreateNew'),
             'route' => route($this->routePath . '/create'), 'routeSave' => route($this->routePath . '/store'),
-            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath,
+            'routePath' => $this->routePath, 'translationPrefix' => 'account.', 'viewPath' => $this->viewPath,
         ];
         $breadcrumbPath = 'users';
         return view($this->viewPath . '.edit',
@@ -190,7 +198,7 @@ class UserController extends Controller
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __('tables.Edit') . ': ' . $data->name,
             'route' => route($this->routePath . '/edit', ['id' => $id]),
             'routeSave' => route($this->routePath . '/update', ['id' => $id]),
-            'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath,
+            'routePath' => $this->routePath, 'translationPrefix' => 'account.', 'viewPath' => $this->viewPath,
         ];
         $breadcrumbPath = 'users';
         return view($this->viewPath . '.edit', compact('data', 'page', 'dateFormatSelectOptions', 'dateFormatSeparatorSelectOptions',
@@ -387,7 +395,7 @@ class UserController extends Controller
         $data = $query->get();
         foreach ($data as &$row) {
             // updated_at format can't be changed, so add a new date attribute
-            $row->updated_date = date(config('settings.date_format_php')[1], strtotime($row->updated_at));
+            $row->updated_date = date($this->userSettings->date_format_php, strtotime($row->updated_at));
             $row->google = $row->google_id ? __('Yes') : '';
             $row->facebook = $row->fb_id ? __('Yes') : '';
         }
