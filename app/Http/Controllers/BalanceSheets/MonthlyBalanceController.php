@@ -305,7 +305,7 @@ class MonthlyBalanceController extends Controller
             'type_id' => ['required', 'numeric'],
             'target_id' => ['required', 'numeric'],
             'product_name' => ['required', 'string'],
-            'amount' => ['required', 'numeric', 'min:1'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
             'unit_price' => ['required', 'numeric', 'min:0.01'],
         ];
         $request->validate($validationFields);

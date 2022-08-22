@@ -20,7 +20,7 @@ class CreateTableDailyBalanceSheets extends Migration
             $table->unsignedInteger('type_id');
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('target_id');
-            $table->unsignedInteger('amount');
+            $table->unsignedDecimal('amount', 8, 2);
             $table->unsignedDecimal('unit_price', 14, 2);
             $table->unsignedDecimal('price', 14, 2);
             $table->timestamps();
