@@ -14,6 +14,7 @@ use App\Models\Currency;
 use App\Models\Timezone;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UsersRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use PDF;
@@ -54,10 +55,11 @@ class UserController extends Controller
             'routePath' => $this->routePath, 'translationPrefix' => $this->translationPrefix, 'viewPath' => $this->viewPath];
         $breadcrumbPath = 'users';
         $statusFilter = HtmlControls::ArrayToCheckedList(config('settings.user_status'), 'general.Status.');
+        $roleFilter = HtmlControls::ArrayToCheckedList(config('settings.user_role'), 'general.UserRole.');
         $googleSelectOptions = HtmlControls::GenerateDropDownListBoolean('');
         $facebookSelectOptions = $googleSelectOptions;
         return view($this->viewPath . '.list', compact('page', 'breadcrumbPath',
-            'googleSelectOptions', 'facebookSelectOptions', 'statusFilter'));
+            'googleSelectOptions', 'facebookSelectOptions', 'statusFilter', 'roleFilter'));
     }
 
     /**
@@ -66,7 +68,8 @@ class UserController extends Controller
      * @return {array} array with data for table
      */
     function list(Request $request) {
-        $data = $this->model::select(['id', \DB::raw("CONCAT(first_name,' ', last_name) as full_name"), 'email', 'updated_at', 'google_id', 'fb_id', 'status']);
+        $data = $this->model::leftJoin('users_roles', 'users.id', '=', 'users_roles.user_id')
+            ->select(['id', \DB::raw("CONCAT(first_name,' ', last_name) as full_name"), 'email', 'updated_at', 'google_id', 'fb_id', 'status', 'role_id']);
         return Datatables::of($data)
             ->filterColumn('google_id', function ($query, $keyword) {
                 switch ($keyword) {
@@ -102,6 +105,25 @@ class UserController extends Controller
                     $query->whereIn('status', $statusListFiltered);
                 }
             })
+            ->filterColumn('role_id', function ($query, $keyword) {
+                $roleList = explode(',', $keyword);
+                $roleListFiltered = [];
+                foreach ($roleList as $val) {
+                    if (is_numeric($val)) {
+                        array_push($roleListFiltered, (int) $val);
+                    }
+                }
+                if ($roleListFiltered && count($roleListFiltered) > 0) {
+                    $query->whereIn('role_id', $roleListFiltered);
+                }
+            })
+            ->addColumn('role_name', function ($item) {
+                if ($item->role_id) {
+                    return __($this->translationPrefix . 'Role.' . config('settings.user_role')[$item->role_id]);
+                } else {
+                    return '';
+                }
+            })
             ->addColumn('status_name', function ($item) {
                 return __($this->translationPrefix . 'Status.' . config('settings.user_status')[$item->status]);
             })
@@ -116,19 +138,21 @@ class UserController extends Controller
             })
             ->addColumn('actions', function ($item) {
                 $actionColumn = null;
+                $customActions = [(object) ['name' => 'permissions', 'route' => route('users/permissions', ['userId' => $item->id]),
+                    'css' => 'item-permissions', 'label' => __('user.Permissions'), 'method' => 'get']];
                 // for own user show only edit menu
                 if ($item->id === auth()->user()->id) {
-                    $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit');
+                    $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit', $customActions);
                 } else {
                     switch ($item->status) {
                         case UserStatus::Pending: // pending
-                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,activate,delete,remove');
+                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,activate,delete,remove', $customActions);
                             break;
                         case UserStatus::Active: // active
-                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,deactivate,delete,remove');
+                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,deactivate,delete,remove', $customActions);
                             break;
                         case UserStatus::Deleted:
-                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,activate,remove');
+                            $actionColumn = HtmlControls::GetActionColumn('users', $item, 'edit,activate,remove', $customActions);
                             break;
                     }
                 }
@@ -158,6 +182,7 @@ class UserController extends Controller
         $dateFormatSelectOptions = SelectUtils::getDateFormatSelectOptions($data->date_format);
         $dateFormatSeparatorSelectOptions = SelectUtils::getDateFormatSeparatorSelectOptions($data->date_format_separator);
         $currencySelectOptions = SelectUtils::getCurrencySelectOptions($data->currency);
+        $roleSelectOptions = SelectUtils::getRoleSelectOptions($data->role_id);
 
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __($this->translationPrefix . 'CreateNew'),
             'route' => route($this->routePath . '/create'), 'routeSave' => route($this->routePath . '/store'),
@@ -166,7 +191,7 @@ class UserController extends Controller
         $breadcrumbPath = 'users';
         return view($this->viewPath . '.edit',
             compact('data', 'page', 'dateFormatSeparatorSelectOptions', 'dateFormatSelectOptions',
-                'currencySelectOptions', 'breadcrumbPath'));
+                'currencySelectOptions', 'roleSelectOptions', 'breadcrumbPath'));
     }
 
     /**
@@ -179,6 +204,7 @@ class UserController extends Controller
         $this->validateItemCreateRequest($request);
         $id = $this->createItem($request);
         $this->saveUserInfo($request, $id);
+        $this->saveUserRole($request, $id);
         return redirect()->route($this->routePath . '/edit', ['id' => $id])->with(['success' => __('general.UpdatedSuccess')]);
     }
 
@@ -194,6 +220,7 @@ class UserController extends Controller
         $dateFormatSelectOptions = SelectUtils::getDateFormatSelectOptions($data->date_format);
         $dateFormatSeparatorSelectOptions = SelectUtils::getDateFormatSeparatorSelectOptions($data->date_format_separator);
         $currencySelectOptions = SelectUtils::getCurrencySelectOptions($data->currency);
+        $roleSelectOptions = SelectUtils::getRoleSelectOptions($data->role_id);
 
         $page = (object) ['title' => __($this->translationPrefix . 'Users'), 'name' => __('tables.Edit') . ': ' . $data->name,
             'route' => route($this->routePath . '/edit', ['id' => $id]),
@@ -202,7 +229,7 @@ class UserController extends Controller
         ];
         $breadcrumbPath = 'users';
         return view($this->viewPath . '.edit', compact('data', 'page', 'dateFormatSelectOptions', 'dateFormatSeparatorSelectOptions',
-            'currencySelectOptions', 'breadcrumbPath'));
+            'currencySelectOptions', 'roleSelectOptions', 'breadcrumbPath'));
     }
 
     /**
@@ -217,6 +244,7 @@ class UserController extends Controller
 
         $this->saveItem($request, $id);
         $userInfo = $this->saveUserInfo($request, $id);
+        $this->saveUserRole($request, $id);
         if ($id === auth()->user()->id) {
             UserUtils::updateUserSetting(auth()->user()->id, $userInfo);
         }
@@ -329,9 +357,10 @@ class UserController extends Controller
     private function getItemForEdit($itemId)
     {
         $data = $this->model::leftJoin('user_infos', 'users.id', '=', 'user_infos.user_id')
-            ->select(['users.id', 'user_id', 'first_name', 'last_name', 'email', 'google_id', 'fb_id', 'status',
+            ->leftJoin('users_roles', 'users.id', '=', 'users_roles.user_id')
+            ->select(['users.id', 'first_name', 'last_name', 'email', 'google_id', 'fb_id', 'status',
                 'avatar', 'date_format', 'date_format_separator',
-                'currency', 'user_infos.updated_at'])
+                'currency', 'user_infos.updated_at', 'users_roles.role_id'])
             ->findOrFail($itemId);
 
         $this->formatUserData($data);
@@ -365,9 +394,11 @@ class UserController extends Controller
     {
         $exportDateRange = $request->has('export_daterange') ? $request->export_daterange : null;
         $exportStatus = $request->has('export_status') ? $request->export_status : null;
+        $exportRole = $request->has('export_role') ? $request->export_role : null;
         // selecting PDF view
-        $query = $this->model::select(['id', \DB::raw("CONCAT(first_name,' ', last_name) as full_name"), 'email',
-            'updated_at', 'google_id', 'fb_id', 'status']);
+        $query = $this->model::leftJoin('users_roles', 'users.id', '=', 'users_roles.user_id')
+            ->select(['id', \DB::raw("CONCAT(first_name,' ', last_name) as full_name"), 'email',
+                'updated_at', 'google_id', 'fb_id', 'status', 'role_id']);
 
         if ($exportDateRange) {
             list($dateStart, $dateEnd) = explode(' - ', $exportDateRange);
@@ -392,6 +423,19 @@ class UserController extends Controller
             }
         }
 
+        if ($exportRole) {
+            $roleList = is_array($exportRole) ? $exportRole : [];
+            $roleListFiltered = [];
+            foreach ($roleList as $val) {
+                if (is_numeric($val)) {
+                    array_push($roleListFiltered, (int) $val);
+                }
+            }
+            if ($roleListFiltered && count($roleListFiltered) > 0) {
+                $query->whereIn('role_id', $roleListFiltered);
+            }
+        }
+
         $data = $query->get();
         foreach ($data as &$row) {
             // updated_at format can't be changed, so add a new date attribute
@@ -410,8 +454,8 @@ class UserController extends Controller
      */
     private function getCsvContent($data)
     {
-        $fieldList = ['id', 'full_name', 'email', 'updated_date', 'google', 'facebook', 'status_name'];
-        $columnList = [__('tables.Id'), __('tables.Name'), __('tables.Email'), __('tables.UpdatedAt'),
+        $fieldList = ['id', 'full_name', 'email', 'role_name', 'updated_date', 'google', 'facebook', 'status_name'];
+        $columnList = [__('tables.Id'), __('tables.Name'), __('tables.Email'), __('tables.Role'), __('tables.UpdatedAt'),
             __('tables.Google'), __('tables.Facebook'), __('tables.Status')];
 
         return ExportUtils::getCsvContent($data, $columnList, $fieldList);
@@ -466,9 +510,9 @@ class UserController extends Controller
     }
 
     /**
-     * update product in database, from provided request
+     * update user in database, from provided request
      * @param {object} $request http request
-     * @param {number} $itemId id of the product to save
+     * @param {number} $itemId id of the user to save
      */
     private function saveItem(Request $request, $itemId)
     {
@@ -481,7 +525,7 @@ class UserController extends Controller
     /**
      * save user additional information
      * @param {object} $request http request
-     * @param {number} $itemId id of the product to save
+     * @param {number} $itemId id of the user to save
      */
     private function saveUserInfo(Request $request, $itemId)
     {
@@ -509,6 +553,23 @@ class UserController extends Controller
         $userInfo->save();
 
         return $userInfo;
+    }
+
+    /**
+     * save user role in database, from provided request
+     * @param {object} $request http request
+     * @param {number} $itemId id of the user to save
+     */
+    private function saveUserRole(Request $request, $itemId)
+    {
+        $userRole = UsersRole::where('user_id', $itemId)->first();
+        if (!$userRole) {
+            $userRole = new UsersRole();
+            $userRole->user_id = $itemId;
+        }
+        $updateFields = ['role_id'];
+        Form::updateModelFromRequest($request, $userRole, $updateFields);
+        $userRole->save();
     }
 
     /** functions used to create / update user - END */

@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'user.format' => \App\Http\Middleware\FormatAuthUser::class,
         'checkstatus' => \App\Http\Middleware\CheckStatus::class,
         'menu.side' => \App\Http\Middleware\MenuSide::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }

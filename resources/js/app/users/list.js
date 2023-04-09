@@ -34,6 +34,15 @@ let KTUserList = (function () {
                     name: 'email',
                 },
                 {
+                    data: 'role_name',
+                    name: 'role_name',
+                },
+                {
+                    data: 'role_id',
+                    name: 'role_id',
+                    visible: false,
+                },
+                {
                     data: 'updated_at',
                     name: 'updated_at',
                 },
@@ -170,6 +179,11 @@ let KTUserList = (function () {
                 .get();
             table.column('status:name').search(statusList);
 
+            let roleList = $('#filterRole input:checked')
+                .map((index, item) => item.value)
+                .get();
+            table.column('role_id:name').search(roleList);
+
             table.draw();
         });
 
@@ -179,6 +193,7 @@ let KTUserList = (function () {
             $('#filterName').val('');
             $('#filterEmail').val('');
             $('#filterStatus input:checked').prop('checked', false);
+            $('#filterRole input:checked').prop('checked', false);
 
             table.columns().search('');
             table.draw();

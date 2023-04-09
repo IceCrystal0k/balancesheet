@@ -37,6 +37,8 @@
                                     <th>{{ __('tables.Id') }}</th>
                                     <th>{{ __('tables.Name') }}</th>
                                     <th>{{ __('tables.Email') }}</th>
+                                    <th>{{ __('tables.Role') }}</th>
+                                    <th>{{ __('tables.Role') }}</th>
                                     <th>{{ __('tables.UpdatedAt') }}</th>
                                     <th>{{ __('tables.Google') }}</th>
                                     <th>{{ __('tables.Facebook') }}</th>

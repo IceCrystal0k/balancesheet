@@ -8,7 +8,9 @@ return [
     'ExportItems' => 'Export Users',
     'RemoveSuccess' => 'User was removed successfully',
     'OwnStatusChangeError' => 'You can not modify the status of your own user',
-
+    'Permissions' => 'Permissions',
+    'Role.admin' => 'Administrator',
+    'Role.user' => 'User',
     'SearchTable' => 'Search Users',
     'Status.pending' => 'Pending',
     'Status.active' => 'Active',

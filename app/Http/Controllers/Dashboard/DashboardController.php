@@ -16,8 +16,9 @@ class DashboardController extends Controller
         $breadcrumbPath = 'dashboard';
         $time = microtime(true) - $start;
         $data = $this->getStats();
+        $isAdmin = auth()->user()->hasRole('admin');
 
-        return view('dashboard.dashboard', compact('page', 'time', 'breadcrumbPath', 'data'));
+        return view('dashboard.dashboard', compact('page', 'time', 'breadcrumbPath', 'data', 'isAdmin'));
     }
 
     private function getStats()

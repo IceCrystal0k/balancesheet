@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BalanceSheets;
 
 use App\Enums\BalanceType;
+use App\Helpers\DataTableUtils;
 use App\Helpers\ExportUtils;
 use App\Helpers\Form;
 use App\Helpers\HtmlControls;
@@ -65,6 +66,7 @@ class MonthlyBalanceController extends Controller
      */
     function list(Request $request) {
         $this->userSettings = UserUtils::getUserSetting($this->userId);
+        $sortInfo = DataTableUtils::getRequestSort($request);
         $data = $this->model::with(['productInfo', 'typeInfo', 'targetInfo'])
             ->select(['id', 'year', 'month', 'type_id', 'product_id', 'target_id', 'amount', 'unit_price', 'price', 'updated_at'])
             ->where('user_id', $this->userId);
@@ -75,6 +77,7 @@ class MonthlyBalanceController extends Controller
                 $query->where('name', 'like', '%' . $filterValue . '%');
             });
         }
+        DataTableUtils::applyRequestSort($request, $data, ['type_name', 'product_name', 'target_name']);
 
         $sums = $this->getSumsForFilters($data, $request);
 
@@ -126,7 +129,7 @@ class MonthlyBalanceController extends Controller
 
         $balanceTypeSelectOptions = SelectUtils::getBalanceTypeSelectOptions($data->type_id);
         $targetSelectOptions = SelectUtils::getTargetSelectOptions($data->target_id);
-        $yearSelectOptions = HtmlControls::GenerateDropDownListYear(0, 5, $data->year);
+        $yearSelectOptions = HtmlControls::GenerateDropDownListYear(2, 5, $data->year);
         $monthSelectOptions = HtmlControls::GenerateDropDownListMonth($data->month);
         $page = (object) ['title' => __($this->translationPrefix . 'MonthlyEntries'), 'name' => __($this->translationPrefix . 'CreateNew'),
             'route' => route($this->routePath . '/create'), 'routeSave' => route($this->routePath . '/store'),
@@ -164,7 +167,7 @@ class MonthlyBalanceController extends Controller
 
         $balanceTypeSelectOptions = SelectUtils::getBalanceTypeSelectOptions($data->type_id);
         $targetSelectOptions = SelectUtils::getTargetSelectOptions($data->target_id);
-        $yearSelectOptions = HtmlControls::GenerateDropDownListYear(0, 5, $data->year);
+        $yearSelectOptions = HtmlControls::GenerateDropDownListYear(2, 5, $data->year);
         $monthSelectOptions = HtmlControls::GenerateDropDownListMonth($data->month);
         $page = (object) ['title' => __($this->translationPrefix . 'MonthlyEntries'), 'name' => __('tables.Edit') . ': ' . $data->name,
             'route' => route($this->routePath . '/edit', ['id' => $id]),

@@ -60,6 +60,7 @@ return [
     'ProfileUpdatedSuccess' => 'Profile updated successfully',
     'RemoveAvatar' => 'Remove avatar',
     'ResetPassword' => 'Reset password',
+    'Role' => 'Role',
     'Settings' => 'Settings',
     'SignInMethod' => 'Sign in method',
     'Status' => 'Status',

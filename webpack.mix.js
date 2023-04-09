@@ -49,8 +49,8 @@ mix
     .copy('resources/vendors/datatables/*.js', 'public/vendors/datatables/')
     .copy('resources/vendors/datatables/images/', 'public/vendors/datatables/images/')
     .copy('resources/vendors/datatables/plugins/', 'public/vendors/datatables/plugins/')
-    .copy('resources/vendors/i18next/i18next.min.js', 'public/vendors/i18next/')
-    .copy('resources/vendors/jquery-ui/jquery-ui-1.13.2.custom/jquery-ui.min.css', 'public/vendors/jquery-ui/')
+    .copy('node_modules/i18next/dist/umd/i18next.min.js', 'public/vendors/i18next/')
+    .copy('resources/vendors/jquery-ui/jquery-ui-1.13.2.custom/', 'public/vendors/jquery-ui/')
     .copy(['resources/media/'], 'public/media') // copy icons
     .copy(['resources/langjs/'], 'public/lang') // copy json translations for js localization
     .copy(['resources/js/custom/'], 'public/js/custom/') // copy custom js
@@ -64,7 +64,7 @@ mix
 
 let appResFolder = 'resources/js/app/';
 
-let appFolders = ['authentication', 'account', 'users'];
+let appFolders = ['authentication', 'account', 'users', 'permissions', 'roles'];
 // let appFolders = ['permissions', 'pages'];
 for (let folder of appFolders) {
     getFiles(appResFolder + folder).forEach(function (filepath) {

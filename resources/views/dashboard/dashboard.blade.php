@@ -21,36 +21,44 @@
                         <!--end::Header-->
                         <!--begin::Body-->
                         <div class="card-body pt-2">
-                            <div class="d-flex align-items-center bg-light-warning rounded p-5 mb-7">
-                                <!--begin::Icon-->
-                                <span class="svg-icon svg-icon-warning me-5">
-                                    @svg('media/theme/icons/duotone/general/user.svg')
-                                </span>
-                                <!--end::Icon-->
-                                <!--begin::Title-->
-                                <div class="flex-grow-1 me-2">
-                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'PendingUsers') }}:</span>
+                            @if ($isAdmin)
+                            <div class="admin-view-container">
+                                <div class="d-flex align-items-center bg-light-warning rounded p-5 mb-7">
+                                    <!--begin::Icon-->
+                                    <span class="svg-icon svg-icon-warning me-5">
+                                        @svg('media/theme/icons/duotone/general/user.svg')
+                                    </span>
+                                    <!--end::Icon-->
+                                    <!--begin::Title-->
+                                    <div class="flex-grow-1 me-2">
+                                        <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'PendingUsers') }}:</span>
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Lable-->
+                                    <span class="fw-bolder py-1">{{$data->pendingUsersCount}}</span>
+                                    <!--end::Lable-->
                                 </div>
-                                <!--end::Title-->
-                                <!--begin::Lable-->
-                                <span class="fw-bolder py-1">{{$data->pendingUsersCount}}</span>
-                                <!--end::Lable-->
-                            </div>
-                            <div class="d-flex align-items-center bg-light-success rounded p-5 mb-7">
-                                <!--begin::Icon-->
-                                <span class="svg-icon svg-icon-success me-5">
-                                    @svg('media/theme/icons/duotone/general/user.svg')
-                                </span>
-                                <!--end::Icon-->
-                                <!--begin::Title-->
-                                <div class="flex-grow-1 me-2">
-                                    <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'ActiveUsers') }}:</span>
+                                <div class="d-flex align-items-center bg-light-success rounded p-5 mb-7">
+                                    <!--begin::Icon-->
+                                    <span class="svg-icon svg-icon-success me-5">
+                                        @svg('media/theme/icons/duotone/general/user.svg')
+                                    </span>
+                                    <!--end::Icon-->
+                                    <!--begin::Title-->
+                                    <div class="flex-grow-1 me-2">
+                                        <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{ __($page->translationPrefix.'ActiveUsers') }}:</span>
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Lable-->
+                                    <span class="fw-bolder py-1">{{$data->activeUsersCount}}</span>
+                                    <!--end::Lable-->
                                 </div>
-                                <!--end::Title-->
-                                <!--begin::Lable-->
-                                <span class="fw-bolder py-1">{{$data->activeUsersCount}}</span>
-                                <!--end::Lable-->
                             </div>
+                            @else
+                            <div class="user-view-container">
+                                User statistics
+                            </div>
+                            @endif
                         </div>
                         <!--end::Body-->
                     </div>

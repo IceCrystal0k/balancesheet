@@ -4,27 +4,29 @@ namespace App\Helpers;
 class Menu
 {
     public $menuSideItems = [
-        ['type' => 'section', 'title' => 'Dashboard'],
+        ['type' => 'section', 'title' => 'Dashboard', 'permission' => 'dashboard'],
         ['type' => 'menu', 'title' => 'Dashboard', 'permission' => 'dashboard',
             'icon' => 'design/penandruller.svg', 'route' => 'dashboard'],
-        ['type' => 'section', 'title' => 'Account'],
-        ['type' => 'menu', 'title' => 'Account', 'permission' => 'account',
+        ['type' => 'section', 'title' => 'Account', 'permission' => ['profile', 'settings']],
+        ['type' => 'menu', 'title' => 'Account', 'permission' => ['profile', 'settings'],
             'icon' => 'general/user.svg', 'path' => 'account',
             'children' => [
                 ['title' => 'Profile', 'permission' => 'profile', 'route' => 'profile'],
                 ['title' => 'Settings', 'permission' => 'settings', 'route' => 'settings'],
             ],
         ],
-        ['type' => 'section', 'title' => 'Administration'],
-        ['type' => 'menu', 'title' => 'Administration', 'permission' => 'administration',
+        ['type' => 'section', 'title' => 'Administration', 'role' => 'admin'],
+        ['type' => 'menu', 'title' => 'Administration', 'role' => 'admin',
             'icon' => 'communication/group.svg', 'section_path' => 'administration',
             'children' => [
-                ['title' => 'Users', 'permission' => 'users', 'route' => 'users'],
+                ['title' => 'Roles', 'route' => 'roles'],
+                ['title' => 'Permissions', 'route' => 'permissions'],
+                ['title' => 'Users', 'route' => 'users'],
             ],
         ],
         ['type' => 'separator'],
-        ['type' => 'section', 'title' => 'BalanceSheet'],
-        ['type' => 'menu', 'title' => 'BalanceSheet', 'permission' => 'balancesheet',
+        ['type' => 'section', 'title' => 'BalanceSheet', 'permission' => ['targets', 'monthly-balance', 'daily-balance', 'statistics']],
+        ['type' => 'menu', 'title' => 'BalanceSheet', 'permission' => ['targets', 'monthly-balance', 'daily-balance', 'statistics'],
             'icon' => 'finance/finance.svg', 'path' => 'balancesheet',
             'children' => [
                 ['title' => 'Targets', 'permission' => 'targets', 'route' => 'targets'],
@@ -37,17 +39,19 @@ class Menu
 
     ];
 
+    private $visibleMenuItems = [];
+
     public function __construct()
     {
-        $this->updateMenuSide($this->menuSideItems, '');
+        $this->visibleMenuItems = $this->getVisibleMenuItems($this->menuSideItems, '');
     }
 
     public function getMenuSide($requestUri)
     {
         $requestUri = $this->formatRequestUri($requestUri);
         $pathList = explode('/', $requestUri);
-        $this->setSelectedMenu($this->menuSideItems, $pathList, 0);
-        return $this->menuSideItems;
+        $this->setSelectedMenu($this->visibleMenuItems, $pathList, 0);
+        return $this->visibleMenuItems;
     }
 
     /**
@@ -63,11 +67,19 @@ class Menu
         $requestUri = preg_replace('/\/create/', '', $requestUri);
 
         // remove pages with custom parents
-        $requestUri = preg_replace('/\/banks\/\d+/', '/banks', $requestUri);
+        $requestUri = preg_replace('/\/permissions\/\d+/', '/permissions', $requestUri);
 
         switch ($requestUri) {
+            case 'permissions':
+            case 'roles':
             case 'users':
                 $requestUri = 'administration/' . $requestUri;
+                break;
+            case 'users/permissions':
+                $requestUri = 'administration/users';
+                break;
+            case 'roles/permissions':
+                $requestUri = 'administration/roles';
                 break;
         }
         return $requestUri;
@@ -99,31 +111,49 @@ class Menu
 
     }
 
-    private function updateMenuSide(&$items, $parentPath)
+    private function getVisibleMenuItems($items, $parentPath)
     {
         $iconBasePath = 'media/theme/icons/duotone/';
+        $visibleMenuList = [];
 
-        foreach ($items as &$menu) {
+        foreach ($items as $menu) {
+            if (!$this->userHasPermission($menu)) {
+                continue;
+            }
+
             $path = isset($menu['path']) && $menu['path'] ? $menu['path'] : '';
+            // create a new menu item
+            $visibleMenu = ['path' => $path];
+            if (isset($menu['type'])) {
+                $visibleMenu['type'] = $menu['type'];
+            }
+
+            if (isset($menu['section_path'])) {
+                $visibleMenu['section_path'] = $menu['section_path'];
+            }
+
             if ($parentPath) {
                 $path = $path ? $parentPath . '/' . $path : $parentPath;
             }
             if (isset($menu['title'])) {
-                $menu['id'] = $menu['title'];
-                $menu['title'] = __('menu.' . $menu['title']);
+                $visibleMenu['id'] = $menu['title'];
+                $visibleMenu['title'] = __('menu.' . $menu['title']);
             }
             if (isset($menu['route'])) {
                 $route = $parentPath ? $parentPath . '/' . $menu['route'] : $menu['route'];
-                $menu['route_short'] = $menu['route'];
-                $menu['route'] = route($route);
+                $visibleMenu['route_short'] = $menu['route'];
+                $visibleMenu['route'] = route($route);
             }
             if (isset($menu['icon'])) {
-                $menu['icon'] = $this->readSvg($iconBasePath . $menu['icon']);
+                $visibleMenu['icon'] = $this->readSvg($iconBasePath . $menu['icon']);
             }
             if (isset($menu['children'])) {
-                $this->updateMenuSide($menu['children'], $path);
+                $visibleMenu['children'] = $this->getVisibleMenuItems($menu['children'], $path);
             }
+
+            array_push($visibleMenuList, $visibleMenu);
         }
+        return $visibleMenuList;
     }
 
     private function readSvg($path, $class = null)
@@ -135,5 +165,30 @@ class Menu
         }
         $output = $svg->saveXML($svg->documentElement);
         return $output;
+    }
+
+    private function userHasPermission($menu)
+    {
+        $hasPermission = true;
+        if (isset($menu['role']) && $menu['role']) {
+            if (!auth()->user()->hasRole($menu['role'])) {
+                $hasPermission = false;
+            }
+        } else if (isset($menu['permission']) && $menu['permission']) {
+            $hasPermission = false;
+            $requiredPermissions = $menu['permission'];
+            if (is_array($requiredPermissions)) {
+                foreach ($requiredPermissions as $permission) {
+                    if (auth()->user()->can($permission)) {
+                        $hasPermission = true;
+                        break;
+                    }
+                }
+            } else {
+                $hasPermission = auth()->user()->can($requiredPermissions);
+            }
+        }
+
+        return $hasPermission;
     }
 }

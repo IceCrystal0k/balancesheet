@@ -8,8 +8,12 @@ use App\Http\Controllers\BalanceSheets\ProductController;
 use App\Http\Controllers\BalanceSheets\StatisticsController;
 use App\Http\Controllers\BalanceSheets\TargetController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Permissions\PermissionController;
 use App\Http\Controllers\Picture\PictureRenderController;
+use App\Http\Controllers\Roles\RoleController;
+use App\Http\Controllers\Roles\RolePermissionsController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Users\UserPermissionsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,10 +56,29 @@ Route::group(['middleware' => ['auth', 'verified', 'checkstatus']], function () 
         Route::get('account/profile', [ProfileController::class, 'profile'])->name('account/profile');
         Route::get('account/settings', [ProfileController::class, 'settings'])->name('account/settings');
 
-        // user views
-        Route::get('users', [UserController::class, 'index'])->name('users');
-        Route::get('users/edit/{id}', [UserController::class, 'edit'])->name('users/edit');
-        Route::get('users/create', [UserController::class, 'create'])->name('users/create');
+        // admin section
+        Route::group(['middleware' => 'role:admin'], function () {
+            // user views
+            Route::get('users', [UserController::class, 'index'])->name('users');
+            Route::get('users/edit/{id}', [UserController::class, 'edit'])->name('users/edit');
+            Route::get('users/create', [UserController::class, 'create'])->name('users/create');
+
+            // permissions views
+            Route::get('permissions', [PermissionController::class, 'index'])->name('permissions');
+            Route::get('permissions/edit/{id}', [PermissionController::class, 'edit'])->name('permissions/edit');
+            Route::get('permissions/create', [PermissionController::class, 'create'])->name('permissions/create');
+
+            // roles views
+            Route::get('roles', [RoleController::class, 'index'])->name('roles');
+            Route::get('roles/edit/{id}', [RoleController::class, 'edit'])->name('roles/edit');
+            Route::get('roles/create', [RoleController::class, 'create'])->name('roles/create');
+
+            // user permissions views
+            Route::get('users/permissions/{userId?}', [UserPermissionsController::class, 'index'])->name('users/permissions');
+
+            // role permissions views
+            Route::get('roles/permissions/{roleId?}', [RolePermissionsController::class, 'index'])->name('roles/permissions');
+        });
 
         /**
          * Balance sheet module - start
@@ -91,17 +114,40 @@ Route::group(['middleware' => ['auth', 'verified', 'checkstatus']], function () 
     Route::post('account/settings/update-connections', [ProfileController::class, 'updateConnectedAccounts'])->name('account/settings/update-connections');
     Route::post('account/setttings/delete-account', [ProfileController::class, 'deleteAccount'])->name('account/settings/delete-account');
 
-    // user actions
-    Route::get('users/list', [UserController::class, 'list'])->name('users/list');
-    Route::post('users/store', [UserController::class, 'store'])->name('users/store');
-    Route::post('users/update/{id}', [UserController::class, 'update'])->name('users/update');
-    Route::delete('users/delete/{id}', [UserController::class, 'delete'])->name('users/delete');
-    Route::delete('users/remove/{id}', [UserController::class, 'remove'])->name('users/remove');
-    Route::post('users/activate/{id}', [UserController::class, 'activate'])->name('users/activate');
-    Route::post('users/deactivate/{id}', [UserController::class, 'deactivate'])->name('users/deactivate');
-    Route::post('users/update-password/{id}', [UserController::class, 'updatePassword'])->name('users/update-password');
-    Route::post('users/update-email/{id}', [UserController::class, 'updateEmail'])->name('users/update-email');
-    Route::post('users/export', [UserController::class, 'export'])->name('users/export');
+    // admin section
+    Route::group(['middleware' => 'role:admin'], function () {
+        // user actions
+        Route::get('users/list', [UserController::class, 'list'])->name('users/list');
+        Route::post('users/store', [UserController::class, 'store'])->name('users/store');
+        Route::post('users/update/{id}', [UserController::class, 'update'])->name('users/update');
+        Route::delete('users/delete/{id}', [UserController::class, 'delete'])->name('users/delete');
+        Route::delete('users/remove/{id}', [UserController::class, 'remove'])->name('users/remove');
+        Route::post('users/activate/{id}', [UserController::class, 'activate'])->name('users/activate');
+        Route::post('users/deactivate/{id}', [UserController::class, 'deactivate'])->name('users/deactivate');
+        Route::post('users/update-password/{id}', [UserController::class, 'updatePassword'])->name('users/update-password');
+        Route::post('users/update-email/{id}', [UserController::class, 'updateEmail'])->name('users/update-email');
+        Route::post('users/export', [UserController::class, 'export'])->name('users/export');
+
+        // permissions actions
+        Route::get('permissions/list', [PermissionController::class, 'list'])->name('permissions/list');
+        Route::post('permissions/store', [PermissionController::class, 'store'])->name('permissions/store');
+        Route::post('permissions/update/{id}', [PermissionController::class, 'update'])->name('permissions/update');
+        Route::delete('permissions/delete/{id}', [PermissionController::class, 'delete'])->name('permissions/delete');
+        Route::post('permissions/export', [PermissionController::class, 'export'])->name('permissions/export');
+
+        // roles actions
+        Route::get('roles/list', [RoleController::class, 'list'])->name('roles/list');
+        Route::post('roles/store', [RoleController::class, 'store'])->name('roles/store');
+        Route::post('roles/update/{id}', [RoleController::class, 'update'])->name('roles/update');
+        Route::delete('roles/delete/{id}', [RoleController::class, 'delete'])->name('roles/delete');
+        Route::post('roles/export', [RoleController::class, 'export'])->name('roles/export');
+
+        // user permissions actions
+        Route::post('users/permissions/update/{id}', [UserPermissionsController::class, 'update'])->name('users/permissions/update');
+
+        // role permissions actions
+        Route::post('roles/permissions/update/{id}', [RolePermissionsController::class, 'update'])->name('roles/permissions/update');
+    });
 
     /**
      * Balance sheet module - start

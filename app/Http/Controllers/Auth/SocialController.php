@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
@@ -47,15 +48,18 @@ class SocialController extends Controller
                 } else {
                     $name = $this->extractNameFromEmail($user->email);
                     $password = Hash::make(Str::random(8));
-                    $newUser = User::create([
+                    $createUser = User::create([
                         'first_name' => $name['firstName'],
                         'last_name' => $name['lastName'],
                         'email' => $user->email,
                         'google_id' => $user->id,
                         'password' => $password,
                     ]);
-                    $newUser->sendEmailVerificationNotification();
-                    Auth::login($newUser);
+                    $createUser->sendEmailVerificationNotification();
+                    // set user role to User
+                    $createUser->roles()->attach(UserRole::User);
+                    // send verification email
+                    Auth::login($createUser);
                 }
                 return redirect()->intended('dashboard');
             }
@@ -98,6 +102,9 @@ class SocialController extends Controller
                         'fb_id' => $user->id,
                         'password' => $password,
                     ]);
+                    // set user role to User
+                    $createUser->roles()->attach(UserRole::User);
+                    // send verification email
                     $createUser->sendEmailVerificationNotification();
                     Auth::login($createUser);
                 }

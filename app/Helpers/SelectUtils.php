@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Helpers\HtmlControls;
 use App\Models\BalanceType;
 use App\Models\Currency;
+use App\Models\Role;
 use App\Models\Target;
 
 class SelectUtils
@@ -72,5 +73,17 @@ class SelectUtils
         $selectedValue = StringUtils::getIntegerValue($selectedValue);
         $data = HtmlControls::ArrayToSelectOptions(config('settings.date_format_separator'), '');
         return HtmlControls::GenerateDropDownList($data, ['value' => $selectedValue, 'valueField' => 'value', 'textField' => 'label']);
+    }
+
+    /**
+     * get role for dropdown, in html format, for the given $selectedValue
+     * @param {number} $selectedValue selected iso_code
+     * @return {string} dropdown data, in html format
+     */
+    public static function getRoleSelectOptions($selectedValue)
+    {
+        $selectedValue = StringUtils::getIntegerValue($selectedValue);
+        $roleList = Role::select('name', 'id')->orderBy('name')->get();
+        return HtmlControls::GenerateDropDownList($roleList, ['value' => $selectedValue, 'valueField' => 'id', 'textField' => 'name']);
     }
 }

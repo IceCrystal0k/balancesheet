@@ -3,18 +3,13 @@ function I18NextTranslate(options) {
         lng: 'en',
         fallbackLng: 'en',
         debug: false,
-        resGetPath: options.translationPath + '__lng__/__ns__.json',
-        lngWhitelist: ['ro', 'en', 'fr', 'de'],
-        selector: '#kt_body',
+        backend: {
+            loadPath: options.translationPath + '{{lng}}.json',
+        },
         callback: null,
     };
-
     options = $.extend({}, _options, options);
-
-    i18n.init(options).done(function () {
-        $(options.selector).i18n();
-        if (options.callback != null) options.callback();
-    });
+    i18n.use(i18nBackend).init(options, options.callback);
 }
 
 module.exports = I18NextTranslate;

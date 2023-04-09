@@ -14,7 +14,7 @@ let KTDailyBalanceList = (function () {
             iDisplayLength: 25,
             info: false,
             ajax: tableRoute,
-            order: [1, 'asc'],
+            order: [2, 'desc'],
             columns: [
                 {
                     data: 'select_row',
@@ -182,7 +182,15 @@ let KTDailyBalanceList = (function () {
             },
         };
         $('#filterDateMin,#filterDateMax').daterangepicker(rangePickerOptions);
-        // make the empty
+        // prevent dropdown menu closing when clicking on calendar
+        $('#filterDateMin,#filterDateMax').on('showCalendar.daterangepicker', function (e, picker) {
+            // datepicker area (the one around the calendar)
+            $(picker.container).addClass('prevent-close');
+            // calendar area
+            var elem = $(picker.container).find('.table-condensed');
+            elem.addClass('prevent-close');
+        });
+        // make the calendar values empty
         $('#filterDateMin,#filterDateMax').val('').trigger('change');
 
         ProductService.init({ selector: '#filterProduct', appendTo: '#toolbarFilter' });

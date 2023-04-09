@@ -34,6 +34,10 @@ return [
         'pending' => 'Pending',
         'hidden' => 'Hidden'],
 
+    'UserRole' => ['admin' => 'Administrator',
+        'user' => 'User',
+    ],
+
     'months' => ['jan' => 'January',
         'feb' => 'February',
         'mar' => 'March',

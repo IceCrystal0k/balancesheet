@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BalanceSheets;
 
 use App\Enums\BalanceType;
+use App\Helpers\DataTableUtils;
 use App\Helpers\DateUtils;
 use App\Helpers\ExportUtils;
 use App\Helpers\Form;
@@ -75,6 +76,7 @@ class DailyBalanceController extends Controller
                 $query->where('name', 'like', '%' . $filterValue . '%');
             });
         }
+        DataTableUtils::applyRequestSort($request, $data);
 
         $sums = $this->getSumsForFilters($data, $request);
 

@@ -118,6 +118,26 @@
                                 <!--end::Col-->
                             </div>
                             <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label
+                                    class="col-lg-4 col-form-label required fw-bold fs-6">{{ __($page->translationPrefix.'Role') }}</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <select name="role_id"
+                                        aria-label="{{ __($page->translationPrefix.'Role') }}"
+                                        data-control="select2"
+                                        data-placeholder="{{ __($page->translationPrefix.'Role') }}"
+                                        class="form-select form-select-solid form-select-lg">
+                                        <option value="">{{ __($page->translationPrefix.'Role') }}</option>
+                                        {!! $roleSelectOptions !!}
+                                    </select>
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
                             @if (!$data->id)
                             <!--begin::Input group-->
                             <div class="row mb-6">

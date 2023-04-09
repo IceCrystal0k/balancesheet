@@ -75,17 +75,21 @@ let KTStatisticsList = (function () {
             minYear: 2022,
             timePicker: false,
             autoApply: true,
-            buttonClasses: 'btn btn-sm prevent-close',
+            buttonClasses: 'btn btn-sm',
             locale: {
                 format: userDateFormat,
             },
         };
         $('#filterDateMin,#filterDateMax').daterangepicker(rangePickerOptions);
+        // prevent dropdown menu closing when clicking on calendar
         $('#filterDateMin,#filterDateMax').on('showCalendar.daterangepicker', function (e, picker) {
+            // datepicker area (the one around the calendar)
+            $(picker.container).addClass('prevent-close');
+            // calendar area
             var elem = $(picker.container).find('.table-condensed');
             elem.addClass('prevent-close');
         });
-        // make the empty
+        // make the calendar values empty
         $('#filterDateMin,#filterDateMax').val('').trigger('change');
 
         ProductService.init({ selector: '#filterProduct', appendTo: '#toolbarFilter' });

@@ -14,7 +14,7 @@ let KTMonthlyBalanceList = (function () {
             iDisplayLength: 25,
             info: false,
             ajax: tableRoute,
-            order: [1, 'asc'],
+            order: [3, 'desc'],
             columns: [
                 {
                     data: 'select_row',
@@ -25,6 +25,7 @@ let KTMonthlyBalanceList = (function () {
                 {
                     data: 'id',
                     name: 'id',
+                    orderable: false,
                 },
                 {
                     data: 'year',

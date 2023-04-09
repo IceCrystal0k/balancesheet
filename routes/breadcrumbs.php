@@ -8,7 +8,9 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 //  with `$trail`. This is nice for IDE type checking and completion.
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-$pageList = ['dashboard', 'account', 'users',
+$pageList = ['dashboard', 'account', 'users', 'permissions', 'roles',
+    'users' => ['permissions'],
+    'roles' => ['permissions'],
     'balancesheet' => ['targets', 'daily-balance', 'monthly-balance', 'statistics'],
 ];
 foreach ($pageList as $pageId => $pageItems) {

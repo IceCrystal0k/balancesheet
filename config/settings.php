@@ -16,6 +16,10 @@ return [
         0 => 'inactive',
         1 => 'active',
     ],
+    'user_role' => [
+        1 => 'admin',
+        2 => 'user',
+    ],
     'article_status' => [
         0 => 'pending',
         1 => 'active',

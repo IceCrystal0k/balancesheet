@@ -56,4 +56,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return __('status.' . config('settings.user_status')[$this->status]);
     }
+
+    public function getRoleNameAttribute()
+    {
+        return __('general.UserRole.' . config('settings.user_role')[$this->role_id]);
+    }
 }
